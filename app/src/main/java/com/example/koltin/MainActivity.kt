@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.example.koltin.navigation.AppNavigation
 import com.example.koltin.ui.theme.KoltinTheme
 import com.example.koltin.ui.theme.screen.HomeScreen
 import com.example.koltin.ui.theme.screen.HomeScreenWithNavBar
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             KoltinTheme {
-                HomeScreenWithNavBar(navController = rememberNavController())
+                AppNavigation()
             }
         }
     }
