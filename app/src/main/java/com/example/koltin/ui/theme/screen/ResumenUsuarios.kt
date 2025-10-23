@@ -1,4 +1,5 @@
 package com.example.koltin.ui.theme.screen
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,14 +11,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun ResumenScreen(navController: NavController) {
+fun ResumenUsuarios(navController: NavController){
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+
+
     ) {
-        Text("Resumen - En desarrollo")
-        Button(onClick = { navController.navigateUp() }) {
+        Text("Resumen de usuarios")
+        Button(onClick = {navController.navigateUp()}) {
             Text("Volver")
         }
     }

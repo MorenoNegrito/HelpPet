@@ -67,6 +67,9 @@ dependencies {
     // Room Database
     implementation("androidx.room:room-runtime:2.8.2")
     implementation("androidx.room:room-ktx:2.8.2")
+    implementation(libs.androidx.material3.window.size.class1)
+    implementation(libs.androidx.runtime)
+    implementation(libs.material3)
 
     // Testing
     testImplementation(libs.junit)
