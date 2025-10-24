@@ -10,6 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
+
+
+
+//Pantala de resumen
 @Composable
 fun ResumenUsuarios(navController: NavController){
     Column(

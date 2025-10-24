@@ -42,6 +42,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1976D2)
+            //a
         )
 
         Column(

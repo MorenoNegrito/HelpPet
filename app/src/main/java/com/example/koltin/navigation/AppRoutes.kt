@@ -1,6 +1,7 @@
 package com.example.koltin.navigation
 
 sealed class Screen(val route: String) {
+    //a
     data object Home : Screen("Home_page")
     data object profile : Screen("Profile_page")
     data object setting : Screen("setting_Page")
