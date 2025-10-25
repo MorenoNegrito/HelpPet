@@ -60,6 +60,7 @@ dependencies {
     // ViewModel y Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    implementation("androidx.compose.material:material-icons-extended")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
@@ -70,6 +71,9 @@ dependencies {
     implementation(libs.androidx.material3.window.size.class1)
     implementation(libs.androidx.runtime)
     implementation(libs.material3)
+    implementation(libs.androidx.ui.text)
+    implementation(libs.androidx.foundation)
+
 
     // Testing
     testImplementation(libs.junit)
@@ -77,6 +81,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+
+
 
     // Debug
     debugImplementation(libs.androidx.ui.tooling)
