@@ -1,5 +1,6 @@
 package com.example.koltin.ui.theme.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,11 +14,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.room.util.TableInfo
+import com.example.koltin.R
 import com.example.koltin.navigation.Screen
 import com.example.kotlin.viewmodel.DesarrolladorViewModel
 
@@ -37,6 +45,8 @@ fun HomeScreenWithNavBar(
     viewModel: DesarrolladorViewModel
 ) {
     // Obtener el estado del viewModel
+    //Transforamos el stateflow del viewmodel en un estado observable de compose
+    //Si cambia el nombre o correo la interfaz se actualiza automaticamente
     val estado by viewModel.estado.collectAsState()
 
     // Lista de opciones del menú
@@ -49,106 +59,94 @@ fun HomeScreenWithNavBar(
         OpcionMenu("Configuración", Icons.Default.Settings, Screen.setting.route)
     )
 
+    //Scafold que es un contenedor jetpack que nos da estructura a la pantalla
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Inicio") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = AzulPrimario,
-                    titleContentColor = Color.White
-                ),
-                actions = {
-                    IconButton(onClick = {
-                        navController.navigate(Screen.profile.route)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Perfil",
-                            tint = Color.White
-                        )
-                    }
-                }
-            )
-        }
+        topBar = { /* tu TopAppBar */ }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(Color(0xFFF5F5F5))
         ) {
-            // Tarjeta de bienvenida simple
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = AzulPrimario
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Text(
-                        text = "Bienvenido",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = estado.nombre.ifBlank { "Usuario" },
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
-                    )
-                    Text(
-                        text = estado.correo,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.8f)
-                    )
-                }
-            }
+            // Imagen de fondo
+            Image(
+                painter = painterResource(id = R.drawable.fondo_pantalla),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
 
-            // Grid de opciones
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxSize()
+            // Contenido encima de la imagen
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
             ) {
-                items(opcionesMenu) { opcion ->
-                    // Tarjeta de opción
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(120.dp)
-                            .clickable {
-                                navController.navigate(opcion.ruta)
-                            },
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White
+                // Tarjeta de bienvenida
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    colors = CardDefaults.cardColors(containerColor = AzulPrimario)
+                ) {
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Text(
+                            text = "Bienvenido",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
                         )
-                    ) {
-                        Column(
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = estado.nombre.ifBlank { "Usuario" },
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
+                        )
+                        Text(
+                            text = estado.correo,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.8f)
+                        )
+                    }
+                }
+
+                // LazyVerticalGrid
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(opcionesMenu) { opcion ->
+                        Card(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                                .fillMaxWidth()
+                                .height(120.dp)
+                                .clickable { navController.navigate(opcion.ruta) },
+                            colors = CardDefaults.cardColors(containerColor = Color.White)
                         ) {
-                            Icon(
-                                imageVector = opcion.icono,
-                                contentDescription = opcion.titulo,
-                                tint = AzulPrimario,
-                                modifier = Modifier.size(40.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = opcion.titulo,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Bold
-                            )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = opcion.icono,
+                                    contentDescription = opcion.titulo,
+                                    tint = AzulPrimario,
+                                    modifier = Modifier.size(40.dp)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = opcion.titulo,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black // letras negras
+                                )
+                            }
                         }
                     }
                 }

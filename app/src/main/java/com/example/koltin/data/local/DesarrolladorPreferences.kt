@@ -8,17 +8,22 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+//CREAMOS UNA PROPIEDAD EXTENDIDA PARA CONTEXT
 private val Context.dataStore by preferencesDataStore("desarrollador_prefs")
 
 class DesarrolladorPreferences(private val context: Context) {
 
+    //Es como el static en java pertenece a la clase no a las instancias
     companion object {
+        //Creacion de la llave ocn string preferencesKey
         val NOMBRE = stringPreferencesKey("nombre")
         val CORREO = stringPreferencesKey("correo")
     }
 
     // Guardar datos del desarrollador
+    //Funcion que puede pausarse sin bloquar el hilo
     suspend fun guardarDesarrollador(nombre: String, correo: String) {
+        //Emite valor cadavez que el data store cambia
         context.dataStore.edit { prefs ->
             prefs[NOMBRE] = nombre
             prefs[CORREO] = correo

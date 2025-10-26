@@ -11,12 +11,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
+//Se hereda de androiwviewmoel para ocupar aplication context y datastore
 class DesarrolladorViewModel(application: Application) : AndroidViewModel(application) {
+
+    //Creamos dos variales la que tiene guion bajo es privada solo el viemodel puede cmabiarala
+    //Y la estado normal es de solo lectura
 
     private val _estado = MutableStateFlow(DesarrolladorUiState())
     val estado: StateFlow<DesarrolladorUiState> = _estado
 
-    // DataStore
+    // creamos una variable para guardas los datos del desarrollador
     private val prefs = DesarrolladorPreferences(application.applicationContext)
 
     init {
@@ -26,6 +31,11 @@ class DesarrolladorViewModel(application: Application) : AndroidViewModel(applic
 
     // --- Cargar sesión guardada ---
     private fun cargarSesion() {
+        //Ocupamos viewmodelscope para launch para lanzar una corrutina para escuhcar los eventos de datastore
+        //Decimos que si el nombre no es nulo y no es blanco lo actualizamos el estado
+        //Lo mismo con el correo
+
+        //Se ejectua en segundo plano
         viewModelScope.launch {
             prefs.obtenerDesarrollador.collect { (nombre, correo) ->
                 if (!nombre.isNullOrBlank() && !correo.isNullOrBlank()) {
@@ -40,7 +50,9 @@ class DesarrolladorViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    // --- Funciones de actualización de campos ---
+    // --- Funciones de actualización de campos
+
+    //Actualizar campo de error
     fun onNombreChange(valor: String) {
         _estado.update { it.copy(nombre = valor, errores = it.errores.copy(nombre = null)) }
     }
@@ -62,16 +74,23 @@ class DesarrolladorViewModel(application: Application) : AndroidViewModel(applic
     }
 
     // --- Validación del formulario ---
+
+
     fun validarFormulario(): Boolean {
+        //Tomamos el valor actual para analizarlo
         val estadoActual = _estado.value
 
         // Validar que acepte términos
+        //Lo validamos con ! Esto nos dice si el estado actual no valido los terminos
+        //Le decimos que debe aceptar terminos
         if (!estadoActual.aceptaTerminos) {
             _estado.update {
                 it.copy(errorGeneral = "Debes aceptar los términos y condiciones")
             }
             return false
         }
+
+
 
         val errores = DesarrolladorErrores(
             nombre = if (estadoActual.nombre.isBlank()) "Campo obligatorio" else null,
@@ -100,8 +119,9 @@ class DesarrolladorViewModel(application: Application) : AndroidViewModel(applic
         return !hayErrores
     }
 
-    // --- Registrar desarrollador ---
-    fun registrarDesarrollador() {
+    // --- Registrar desarrollador (CON CALLBACK) ---
+    //SIGNIFICA QUE ONSUCCES NO DEVEULVE NADA SOLO EJECUTA
+    fun registrarDesarrollador(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _estado.update { it.copy(cargando = true) }
 
@@ -116,12 +136,17 @@ class DesarrolladorViewModel(application: Application) : AndroidViewModel(applic
 
                 println("✅ Desarrollador guardado: ${estadoActual.nombre}")
 
+                // Actualizar el estado inmediatamente (no esperar al collect)
                 _estado.update {
                     it.copy(
                         cargando = false,
                         errorGeneral = null
                     )
                 }
+
+                // Llamar al callback de éxito
+                onSuccess()
+
             } catch (e: Exception) {
                 _estado.update {
                     it.copy(

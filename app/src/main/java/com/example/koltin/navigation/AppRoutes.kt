@@ -1,7 +1,8 @@
 package com.example.koltin.navigation
 
+//Cada pantalla tiene su propio ruta
 sealed class Screen(val route: String) {
-    //a
+    //Cada pantalla es una constancia unico
     data object Home : Screen("Home_page")
     data object profile : Screen("Profile_page")
     data object setting : Screen("setting_Page")

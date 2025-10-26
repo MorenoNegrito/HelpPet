@@ -151,9 +151,12 @@ fun RegistroDesarrolladorScreen(
         Button(
             onClick = {
                 if (viewModel.validarFormulario()) {
-                    viewModel.registrarDesarrollador()
-                    // La navegación se hace automáticamente por el LaunchedEffect
-                    // cuando detecta que hay nombre y correo guardados
+                    viewModel.registrarDesarrollador {
+                        // Navegar cuando termine de guardar
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Registro.route) { inclusive = true }
+                        }
+                    }
                 }
             },
             enabled = !estado.cargando,

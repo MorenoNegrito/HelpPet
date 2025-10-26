@@ -11,7 +11,12 @@ import com.example.kotlin.viewmodel.DesarrolladorViewModel
 
 @Composable
 fun AppNavigation() {
+    //Recordamos el estado de navegacion
+
     val navController = rememberNavController()
+    //Utilizamos instacncai el viewmodel patron mvvm significa que no se destruye al cambiar de pantlla
+    //mientas la app siga activa en memoria
+    //View model se prepara para persistir entre pantallas
     val desarrolladorViewModel: DesarrolladorViewModel = viewModel()
 
     NavHost(

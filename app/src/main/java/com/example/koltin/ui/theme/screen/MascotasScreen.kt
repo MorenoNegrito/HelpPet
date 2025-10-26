@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 
+//a
 private val AzulPrimario = Color(0xFF1976D2)
 
 data class Mascota(
